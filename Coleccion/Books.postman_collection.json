@@ -1,0 +1,344 @@
+{
+	"info": {
+		"_postman_id": "d9e36283-3f4c-4452-b10d-792b2cc2d19b",
+		"name": "Books",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autenticacion correcta",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responce=pm.response.json();\r",
+							"var tokenobtenido=responce.accessToken\r",
+							"pm.environment.set(\"token\", tokenobtenido);\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clientName\": \"Postman\",\r\n    \"clientEmail\": \"sdjdjk@example.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{autenticacion}}",
+					"host": [
+						"{{base_url}}{{autenticacion}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Usuario ya registrado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Ingrese otro email\",function(){\r",
+							"pm.expect(pm.response.text()).to.include(\"API client already registered. Try a different email.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clientName\": \"Postman\",\r\n    \"clientEmail\": \"sdjdjk@example.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{autenticacion}}",
+					"host": [
+						"{{base_url}}{{autenticacion}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear un libro",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responce=pm.response.json();\r",
+							"var idObtenido=responce.orderId\r",
+							"pm.environment.set(\"id_ultimo_pedido\", idObtenido);\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bookId\": 4,\r\n    \"customerName\": \"Almendra\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{crear_libro y consultar}}",
+					"host": [
+						"{{base_url}}{{crear_libro y consultar}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar libro",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customerName\": \"Alfredo\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{actualizar y eliminar}}{{id_ultimo_pedido}}",
+					"host": [
+						"{{base_url}}{{actualizar y eliminar}}{{id_ultimo_pedido}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Error actualizar libro",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Agregue el nombre para actualizar \", function(){\r",
+							"pm.expect(pm.response.text()).to.include(\"No order with id null.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"customerName\": \"\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}{{actualizar y eliminar}}{{id_ultimo_pedido}}",
+					"host": [
+						"{{base_url}}{{actualizar y eliminar}}{{id_ultimo_pedido}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar libro",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"el titulo del libro coincide con id '4yAYDLopKZgUv-d-Dxmtz' coincide con el nombre\",function(){\r",
+							"var jsonData = pm.response.json();\r",
+							"var libro = jsonData.find(x => x.id== \"4yAYDLopKZgUv-d-Dxmtz\")\r",
+							"pm.expect(libro.customerName).to.equal(\"Almendra\");})\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}{{crear_libro y consultar}}",
+					"host": [
+						"{{base_url}}{{crear_libro y consultar}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar libro",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function () {\r",
+							"pm.response.to.have.status(204);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}{{actualizar y eliminar}}{{id_ultimo_pedido}}",
+					"host": [
+						"{{base_url}}{{actualizar y eliminar}}{{id_ultimo_pedido}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar libro por id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"ID 3 de libro\", function(){\r",
+							"pm.expect(pm.response.text()).to.include(\"Pedro\")});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{token}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}{{consultar por id}}",
+					"host": [
+						"{{base_url}}{{consultar por id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
